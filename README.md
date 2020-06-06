@@ -1,2 +1,2 @@
-# stroller
-File to string key, value map utility.
+# jet
+Persist or retrieve string key, value pairs in file.
