@@ -15,13 +15,16 @@ namespace jet {
     std::fstream& file;
 
   public:
-    string(std::fstream& file) : file{file} {}
+    // Constructor for jet::string.
+    explicit string(std::fstream& file) : file{file} {}
 
+    // Persists a string into the file.
     inline string& operator<<(const std::string& str) {
-      string::file << str << '\0';
+      this->file << str << '\0';
       return *this;
     }
 
+    // Retrieves a string from the file.
     friend std::ostream& operator<<(std::ostream& os, const string& jetstr);
   };
 
@@ -29,7 +32,6 @@ namespace jet {
     auto c { ' ' };
 
     while (true) {
-      // Enable skipped characters to be read.
       jetstr.file >> std::noskipws >> c;
       
       if (c == '\0')
