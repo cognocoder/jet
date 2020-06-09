@@ -9,38 +9,39 @@
 // Jet namespace.
 namespace jet {
 
-  // Jet string: persist and retrieve a string to or from a file.
-  namespace string {
+  // Persist or retrieve a string over a file.
+  class string {
+  private:
+    std::fstream& file;
 
-    // Writes a string followed by the null terminator character to the file.
-    inline void persist(std::fstream& file, const std::string& str) {
-      file << str << '\0';
+  public:
+    string(std::fstream& file) : file{file} {}
+
+    inline string& operator<<(const std::string& str) {
+      string::file << str << '\0';
+      return *this;
     }
 
-    // Reads a string from file.
-    // Consumes the string and a null terminator character.
-    inline std::string retrieve(std::fstream& file) {
-      auto c { ' ' };
-      std::stringstream ss;
+    friend std::ostream& operator<<(std::ostream& os, const string& jetstr);
+  };
+
+  inline std::ostream& operator<<(std::ostream& os, const string& jetstr) {
+    auto c { ' ' };
+
+    while (true) {
+      // Enable skipped characters to be read.
+      jetstr.file >> std::noskipws >> c;
       
-      while (true) {
-
-        // Enable skipped characters to be read.
-        file >> std::noskipws >> c;
-        
-        if (c == '\0')
-          break;
-        if (file.eof())
-          throw std::runtime_error { "End of file reached." };
-        
-        ss << c;
-      }
-
-      return ss.str();
+      if (c == '\0')
+        break;
+      if (jetstr.file.eof())
+        throw std::runtime_error { "End of file reached." };
+      
+      os << c;
     }
 
+    return os;
   }
-
 }
 
 #endif
