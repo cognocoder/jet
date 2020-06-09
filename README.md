@@ -1,2 +1,2 @@
 # jet
-Persist or retrieve string from a file.
+Persist or retrieve string to or from a file.
