@@ -33,3 +33,7 @@
 
 # .vscode folder
 .vscode/*
+
+# Project specific files: executable and output driver files
+jet
+*.str
