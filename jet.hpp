@@ -2,14 +2,16 @@
 #ifndef _JET_HPP_
 #define _JET_HPP_
 
-#include <string>
 #include <fstream>
 #include <sstream>
+#include <string>
 
 // Jet namespace.
 namespace jet {
+
   // Jet string: persist and retrieve a string to or from a file.
   namespace string {
+
     // Writes a string followed by the null terminator character to the file.
     inline void persist(std::fstream& file, const std::string& str) {
       file << str << '\0';
@@ -23,7 +25,8 @@ namespace jet {
       
       while (true) {
 
-        file >> c;
+        // Enable skipped characters to be read.
+        file >> std::noskipws >> c;
         
         if (c == '\0')
           break;
@@ -35,7 +38,9 @@ namespace jet {
 
       return ss.str();
     }
+
   }
+
 }
 
 #endif
