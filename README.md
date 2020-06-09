@@ -1,2 +1,2 @@
 # jet
-Persist or retrieve string key, value pairs in file.
+Persist or retrieve string from a file.
