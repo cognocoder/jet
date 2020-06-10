@@ -1,23 +1,33 @@
 
+# Executable file name.
 BIN := jet
 
-CFLAGS := -Wall -Wextra -Werror -Wfatal-errors -pedantic -pedantic-errors
+# Include directories.
+INC := libraries
+
+# Compiler flags.
+CFLAGS := -I $(INC)
+CFLAGS += -Wall -Wextra -Werror -Wfatal-errors -pedantic -pedantic-errors
 CFLAGS += -std=c++17
 
-PKG := jet.hpp
+# Default driver in use.
+DRV := string
+# Package public header files.
+PKG := *.hpp
+# Private header files.
+LIB := $(INC)/*.hpp
 
-.PHONY: build driver clean run all
+.PHONY: all clean driver run 
 
-build: $(PKG)
-	@g++ $? $(CFLAGS) -c -o $(BIN).o
-
-driver: $(PKG) drivers/$(DRV).cpp
-	@g++ $? $(CFLAGS) -o $(BIN)
+# Since this is a header only library, default target will clean the 
+# environment, build the default driver, and run it.
+all: clean driver run
 
 clean:
-	@rm -rf $(BIN) $(BIN).o *.str
+	@rm -rf $(BIN) *.str	
 	
-all: clean run
+driver: $(PKG) $(LIB) drivers/$(DRV).cpp
+	@g++ $? $(CFLAGS) -o $(BIN)
 
 run: $(BIN)
 	@./$(BIN)
