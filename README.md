@@ -50,9 +50,30 @@ int main() {
   return 0;
 }
 ```
+
 `stdout`
 ```
 rec \0 rec ~
+```
+
+### How it works?
+The `jet::string` class is constructed with a file stream reference. Once a persist command is issued, the `jet::string` instance will attempt to write the `std::string` into the file, followed by a **null terminator** character `'\0'`. The `jet::string` object is then returned to enable sequential writes:
+
+```C++
+jet::string { file } << "cogno" << "coder";
+```
+
+The retrieve method will attempt to read the file, a character at a time, until a null terminator character is found. A `std::runtime_error` is thrown if the end of file is reached before a null terminator character.
+
+A `jet::string` can be retrieved into a output stream `std::ostream` or a `std::string`. The retrieve method returns the output stream, if used against one, in order to enable sequential stream data flow:
+
+```C++
+  std::cout << jet::string { retrieve_file } << "data flow" << std::endl;
+```
+
+A `std::string` can be retrieved using the `str` method:
+```C++
+  std::string str { jet::string { retrieve_file }.str() };
 ```
 
 ---

@@ -11,22 +11,29 @@ namespace jet {
 
   // Persist or retrieve a string over a file.
   class string {
-  private:
-    std::fstream& file;
-
   public:
     // Constructor for jet::string.
     explicit string(std::fstream& file) : file{file} {}
 
     // Persists a string into the file.
-    inline string operator<<(const std::string& str) {
+    inline string operator<<(const std::string& str) const {
       this->file << str << '\0';
       return *this;
     }
 
-    // Retrieves a string from the file into a ostream or a string.
+    // Retrieves a string from the file into a std::ostream.
     friend inline std::ostream& operator<<(std::ostream& os, const string& jetstr);
-    friend inline std::string& operator<<(std::string& os, const string& jetstr);
+
+    // Retrieves a string from the file into a std::string.
+    inline std::string str() const {
+      std::stringstream ss;
+      ss << *this;
+      return ss.str();
+    }
+
+  private:
+    std::fstream& file;
+      
   };
 
   inline std::ostream& operator<<(std::ostream& os, const string& jetstr) {
@@ -46,12 +53,6 @@ namespace jet {
     return os;
   }
 
-  inline std::string& operator<<(std::string& str, const string& jetstr) {
-    std::stringstream ss; 
-    ss << jetstr;
-    str = ss.str();
-    return str;
-  }
 }
 
 #endif
