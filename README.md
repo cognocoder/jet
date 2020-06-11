@@ -19,35 +19,32 @@ target: ... jet/jet.hpp jet/libraries/string.hpp ...
   actions
 ```
 
+To clean the environment, build and run the string driver though `make`:
+```bash
+make DRV=string
+```
+
 ---
 
 ## `jet::string`
-Persist or retrieve a string over a file. Driver string provides an example of usage:
+Persist or retrieve a string over a file. The string driver provides an example of usage:
 
-`drivers/string.cpp`
+Partial view of `drivers/string.cpp`
 ```C++
-#include "../jet.hpp"
+// Persist a string into the file.
+auto persist_path { "./test.str" };
+auto persist_mode { std::fstream::out | std::fstream::trunc };
+std::fstream persist_file { persist_path, persist_mode };
+jet::string { persist_file } << "rec \\0 rec ~\0~ !rec";
 
-#include <fstream>
-#include <iostream>
+// Force sync with underlying device so that the read occurs after the write.
+persist_file.flush();
 
-int main() {
-  // Persist a string into the file.
-  auto persist_path { "./test.str" };
-  auto persist_mode { std::fstream::out | std::fstream::trunc };
-  std::fstream persist_file { persist_path, persist_mode };
-  jet::string { persist_file } << "rec \\0 rec ~\0~ !rec";
-
-  // Force sync with underlying device so that the read occurs after the write.
-  persist_file.flush();
-
-  // Retrieves the recorded string from the file as a string stream.
-  auto retrieve_path { "./test.str" };
-  auto retrieve_mode { std::fstream::in };
-  std::fstream retrieve_file { retrieve_path, retrieve_mode };
-  std::cout << jet::string { retrieve_file } << std::endl;
-
-  return 0;
+// Retrieves the recorded string from the file as a string stream.
+auto retrieve_path { "./test.str" };
+auto retrieve_mode { std::fstream::in };
+std::fstream retrieve_file { retrieve_path, retrieve_mode };
+std::cout << jet::string { retrieve_file } << std::endl;
 }
 ```
 
@@ -71,15 +68,40 @@ A `jet::string` can be retrieved into a output stream `std::ostream` or a `std::
   std::cout << jet::string { retrieve_file } << "data flow" << std::endl;
 ```
 
-A `std::string` can be retrieved using the `str` method:
+A `std::string` can be retrieved using the `value` method:
 ```C++
-  std::string str { jet::string { retrieve_file }.str() };
+  std::string str { jet::string { retrieve_file }.value() };
 ```
 
 ---
 
 ## `jet::pair`
-Comming soon.
+Persist or retrieve a pair of strings over a file. The `pair` driver provides an example of usage:
+
+Partial view of `drivers/partial.cpp`
+```C++
+// Persist a pair of strings into the file.
+auto persist_path { "./test.str" };
+auto persist_mode { std::fstream::out | std::fstream::trunc };
+std::fstream persist_file { persist_path, persist_mode };
+jet::pair { persist_file } << std::make_pair ( "1. first", "2. second" );
+
+// Force sync with underlying device so that the read occurs after the write.
+persist_file.flush();
+
+// Retrieves the recorded pair of strings from the file through a stream.
+auto retrieve_path { "./test.str" };
+auto retrieve_mode { std::fstream::in };
+std::fstream retrieve_file { retrieve_path, retrieve_mode };
+std::cout << jet::pair { retrieve_file } << std::endl;
+```
+
+`stdout`
+```
+jet::pair 0x...
+    first 1. first
+   second 2. second
+```
 
 ---
 

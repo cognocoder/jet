@@ -15,7 +15,7 @@ int main() {
   // Force sync with underlying device so that the read occurs after the write.
   persist_file.flush();
 
-  // Retrieves the recorded string from the file as a string stream.
+  // Retrieves the recorded string from the file through a stream.
   auto retrieve_path { "./test.str" };
   auto retrieve_mode { std::fstream::in };
   std::fstream retrieve_file { retrieve_path, retrieve_mode };
