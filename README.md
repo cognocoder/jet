@@ -80,27 +80,20 @@ Persist or retrieve a pair of strings over a file. The `pair` driver provides an
 Partial view of `drivers/partial.cpp`
 ```C++
 // Persist a pair of strings into the file.
-auto persist_path { "./test.str" };
-auto persist_mode { std::fstream::out | std::fstream::trunc };
-std::fstream persist_file { persist_path, persist_mode };
 jet::pair { persist_file } << std::make_pair ( "1. first", "2. second" );
 
-// Force sync with underlying device so that the read occurs after the write.
-persist_file.flush();
-
 // Retrieves the recorded pair of strings from the file through a stream.
-auto retrieve_path { "./test.str" };
-auto retrieve_mode { std::fstream::in };
-std::fstream retrieve_file { retrieve_path, retrieve_mode };
-std::cout << jet::pair { retrieve_file } << std::endl;
+auto pair { jet::pair { retrieve_file }.value() };
+std::cout << pair.first << "\n" << pair.second << "\n\n";
 ```
 
 `stdout`
 ```
-jet::pair 0x...
-    first 1. first
-   second 2. second
+1. first
+1. second
 ```
+
+The variable `pair` type is `std::pair<std::string,std::string>`.
 
 ---
 
@@ -110,35 +103,28 @@ Persist or retrieve a map of strings over a file. The `map` driver provides an e
 Partial view of `drivers/map.cpp`
 ```C++
 // Persist a map of strings into the file.
-auto persist_path { "./test.str" };
-auto persist_mode { std::fstream::out | std::fstream::trunc };
-std::fstream persist_file { persist_path, persist_mode };
 jet::map { persist_file } << std::map<std::string,std::string> { 
   std::make_pair ( "1. key", "1. value" ),
   std::make_pair ( "2. key", "2. value" ),
   std::make_pair ( "3. key", "3. value" ) 
 };
 
-// Force sync with underlying device so that the read occurs after the write.
-persist_file.flush();
-
 // Retrieves the recorded map of strings from the file through a stream.
-auto retrieve_path { "./test.str" };
-auto retrieve_mode { std::fstream::in };
-std::fstream retrieve_file { retrieve_path, retrieve_mode };
-std::cout << jet::map { retrieve_file } << std::endl;
+auto map { jet::map { retrieve_file }.value() };
+for (const auto& pair: map)
+  std::cout << pair.first << "\n" << pair.second << "\n\n";
 ```
 
 `stdout`
 ```
-jet::map 0x7fff93d23900
+1. key
+1. value
 
-     key 1. key
-   value 1. value
+2. key
+2. value
 
-     key 2. key
-   value 2. value
-
-     key 3. key
-   value 3. value
+3. key
+3. value
 ```
+
+The variable `map` type is `std::map<std::string,std::string>`.
