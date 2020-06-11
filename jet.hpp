@@ -4,5 +4,6 @@
 
 #include "libraries/string.hpp"
 #include "libraries/pair.hpp"
+#include "libraries/map.hpp"
 
 #endif

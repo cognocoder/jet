@@ -16,13 +16,14 @@ namespace jet {
     explicit string(std::fstream& file) : file{file} {}
 
     // Persists a string into the file.
-    inline string operator<<(const std::string& str) const {
+    inline jet::string operator<<(const std::string& str) const {
       this->file << str << '\0';
       return *this;
     }
 
     // Operator version of stream method.
-    friend inline std::ostream& operator<<(std::ostream& os, const jet::string& jetstr);
+    friend inline std::ostream& operator<<
+        (std::ostream& os, const jet::string& jetstr);
 
     // Retrieves a string from the file into a std::string.
     inline std::string value() const {

@@ -11,11 +11,11 @@ CFLAGS += -Wall -Wextra -Werror -Wfatal-errors -pedantic -pedantic-errors
 CFLAGS += -std=c++17
 
 # Default driver in use.
-DRV := string
+DRV := map
 # Package public header files.
 PKG := *.hpp
 # Private header files.
-LIB := $(INC)/*.hpp
+LIB := $(INC)/string.hpp $(INC)/pair.hpp $(INC)/map.hpp
 
 .PHONY: all clean driver run 
 

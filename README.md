@@ -20,8 +20,8 @@ target: ... jet/jet.hpp jet/libraries/string.hpp ...
 ```
 
 To clean the environment, build and run the string driver though `make`:
-```bash
-make DRV=string
+```shell
+$ make DRV=string
 ```
 
 ---
@@ -45,7 +45,6 @@ auto retrieve_path { "./test.str" };
 auto retrieve_mode { std::fstream::in };
 std::fstream retrieve_file { retrieve_path, retrieve_mode };
 std::cout << jet::string { retrieve_file } << std::endl;
-}
 ```
 
 `stdout`
@@ -106,4 +105,40 @@ jet::pair 0x...
 ---
 
 ## `jet::map`
-Comming soon.
+Persist or retrieve a map of strings over a file. The `map` driver provides an example of usage:
+
+Partial view of `drivers/map.cpp`
+```C++
+// Persist a map of strings into the file.
+auto persist_path { "./test.str" };
+auto persist_mode { std::fstream::out | std::fstream::trunc };
+std::fstream persist_file { persist_path, persist_mode };
+jet::map { persist_file } << std::map<std::string,std::string> { 
+  std::make_pair ( "1. key", "1. value" ),
+  std::make_pair ( "2. key", "2. value" ),
+  std::make_pair ( "3. key", "3. value" ) 
+};
+
+// Force sync with underlying device so that the read occurs after the write.
+persist_file.flush();
+
+// Retrieves the recorded map of strings from the file through a stream.
+auto retrieve_path { "./test.str" };
+auto retrieve_mode { std::fstream::in };
+std::fstream retrieve_file { retrieve_path, retrieve_mode };
+std::cout << jet::map { retrieve_file } << std::endl;
+```
+
+`stdout`
+```
+jet::map 0x7fff93d23900
+
+     key 1. key
+   value 1. value
+
+     key 2. key
+   value 2. value
+
+     key 3. key
+   value 3. value
+```
