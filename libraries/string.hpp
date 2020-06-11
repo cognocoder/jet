@@ -21,36 +21,42 @@ namespace jet {
       return *this;
     }
 
-    // Retrieves a string from the file into a std::ostream.
-    friend inline std::ostream& operator<<(std::ostream& os, const string& jetstr);
+    // Operator version of stream method.
+    friend inline std::ostream& operator<<(std::ostream& os, const jet::string& jetstr);
 
     // Retrieves a string from the file into a std::string.
-    inline std::string str() const {
+    inline std::string value() const {
       std::stringstream ss;
       ss << *this;
       return ss.str();
     }
 
-  private:
-    std::fstream& file;
-      
+  protected:
+    // Retrieves a string from the file into a std::ostream.
+    inline std::ostream& stream(std::ostream& os) const {
+      auto c { ' ' };
+
+      while (true) {
+        file >> std::noskipws >> c;
+        
+        if (c == '\0')
+          break;
+        if (file.eof())
+          throw std::runtime_error { "End of file reached." };
+        
+        os << c;
+      }
+
+      return os;
+    }
+    
+    private:
+      std::fstream& file;
+
   };
 
-  inline std::ostream& operator<<(std::ostream& os, const string& jetstr) {
-    auto c { ' ' };
-
-    while (true) {
-      jetstr.file >> std::noskipws >> c;
-      
-      if (c == '\0')
-        break;
-      if (jetstr.file.eof())
-        throw std::runtime_error { "End of file reached." };
-      
-      os << c;
-    }
-
-    return os;
+  inline std::ostream& operator<<(std::ostream& os, const jet::string& jetstr) {
+    return jetstr.stream(os);
   }
 
 }
