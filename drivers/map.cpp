@@ -13,7 +13,7 @@ int main() {
   auto persist_mode { std::fstream::out | std::fstream::trunc };
   std::fstream persist_file { persist_path, persist_mode };
   
-  jet::map { persist_file } << std::map<std::string,std::string> { 
+  jet::map { persist_file, true } << std::map<std::string,std::string> { 
     std::make_pair ( "1. key", "1. value" ),
     std::make_pair ( "2. key", "2. value" ),
     std::make_pair ( "3. key", "3. value" ) 
@@ -27,9 +27,11 @@ int main() {
   auto retrieve_mode { std::fstream::in };
   std::fstream retrieve_file { retrieve_path, retrieve_mode }; 
 
-  auto map { jet::map { retrieve_file }.value() };
+  auto map { jet::map { retrieve_file, true }.value() };
   for (const auto& pair: map)
-    std::cout << pair.first << "\n" << pair.second << "\n\n";
+    std::cout << pair.first << pair.second;
+
+  std::cout << std::endl;
 
   return 0;
 }

@@ -13,12 +13,14 @@ namespace jet {
   class pair : public jet::string {
   public:
     // Constructor for jet::pair.
-    explicit pair(std::fstream& file) : jet::string{file}, file{file} {}
+    pair(std::fstream& file, bool breakline = false) : 
+        jet::string{file, breakline}, file{file} {}
 
     // Persists a pair of strings into the file.
     inline jet::pair operator<<
         (const std::pair<std::string,std::string>& pair) const {
-      this->file << pair.first << '\0' << pair.second << '\0';
+      jet::string::operator<<(pair.first);
+      jet::string::operator<<(pair.second);
       return *this;
     }
 
@@ -28,10 +30,7 @@ namespace jet {
 
     // Retrieves a pair of strings from the file into a std::pair.
     inline std::pair<std::string,std::string> value() const {
-      std::stringstream ss1, ss2;
-      stream(ss1);
-      stream(ss2);
-      return { ss1.str(), ss2.str() };
+      return { jet::string::value(), jet::string::value() };
     }
 
   private:
@@ -40,8 +39,7 @@ namespace jet {
   };
 
   inline std::ostream& operator<<(std::ostream& os, const jet::pair& jetpair) {
-    os << "jet::pair " << &jetpair << "\n\n    first ";
-    jetpair.stream(os) << "\n   second ";
+    jetpair.stream(os);
     jetpair.stream(os);
     return os;
   }

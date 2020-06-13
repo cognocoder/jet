@@ -13,11 +13,13 @@ namespace jet {
   class string {
   public:
     // Constructor for jet::string.
-    explicit string(std::fstream& file) : file{file} {}
+    string(std::fstream& file, bool breakline = false) : 
+        file{file}, breakline{breakline} {}
 
     // Persists a string into the file.
     inline jet::string operator<<(const std::string& str) const {
       this->file << str << '\0';
+      if (this->breakline) this->file << '\n';
       return *this;
     }
 
@@ -38,13 +40,19 @@ namespace jet {
       auto c { ' ' };
 
       while (true) {
-        file >> std::noskipws >> c;
+        this->file >> std::noskipws >> c;
         
-        if (c == '\0')
+        if (c == '\0') {
           break;
-        if (file.eof())
+        }
+        if (this->file.eof())
           throw std::runtime_error { "End of file reached." };
         
+        os << c;
+      }
+
+      if (this->breakline) {
+        this->file >> std::noskipws >> c;
         os << c;
       }
 
@@ -53,6 +61,8 @@ namespace jet {
     
     private:
       std::fstream& file;
+
+      bool breakline;
 
   };
 

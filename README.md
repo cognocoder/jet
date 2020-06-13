@@ -1,3 +1,4 @@
+
 # `jet`
 Persist or retrieve a string, string pair or string map over a file.
 
@@ -36,7 +37,7 @@ auto persist_path { "./test.str" };
 auto persist_mode { std::fstream::out | std::fstream::trunc };
 std::fstream persist_file { persist_path, persist_mode };
 
-jet::string { persist_file } << "rec \\0 rec ~\0~ !rec";
+jet::string { persist_file, true } << "rec \\0 rec ~\0~ !rec";
 
 // Force sync with underlying device so that the read occurs after the write.
 persist_file.flush();
@@ -46,13 +47,15 @@ auto retrieve_path { "./test.str" };
 auto retrieve_mode { std::fstream::in };
 std::fstream retrieve_file { retrieve_path, retrieve_mode };
 
-std::cout << jet::string { retrieve_file } << std::endl;
+std::cout << jet::string { retrieve_file, true } << std::endl;
 ```
 
 `stdout`
 ```
 rec \0 rec ~
 ```
+
+The `jet::string` constructor receives the file to persist or retrieve and a boolean wheter to use breaklines for human readbility. Default is false.
 
 ### How it works?
 The `jet::string` class is constructed with a file stream reference. Once a persist command is issued, the `jet::string` instance will attempt to write the `std::string` into the file, followed by a **null terminator** character `'\0'`. The `jet::string` object is then returned to enable sequential writes:
@@ -82,17 +85,17 @@ Persist or retrieve a pair of strings over a file. The `pair` driver provides an
 Partial view of `drivers/partial.cpp`
 ```C++
 // Persist a pair of strings into the file.
-jet::pair { persist_file } << std::make_pair ( "1. first", "2. second" );
+jet::pair { persist_file, true } << std::make_pair ( "first", "second" );
 
 // Retrieves the recorded pair of strings from the file through a stream.
-auto pair { jet::pair { retrieve_file }.value() };
-std::cout << pair.first << "\n" << pair.second << "\n\n";
+auto pair { jet::pair { retrieve_file, true }.value() };
+std::cout << pair.first << pair.second << std::endl;
 ```
 
 `stdout`
 ```
-1. first
-1. second
+first
+second
 ```
 
 The variable `pair` type is `std::pair<std::string,std::string>`.
@@ -105,26 +108,26 @@ Persist or retrieve a map of strings over a file. The `map` driver provides an e
 Partial view of `drivers/map.cpp`
 ```C++
 // Persist a map of strings into the file.
-jet::map { persist_file } << std::map<std::string,std::string> { 
+jet::map { persist_file, true } << std::map<std::string,std::string> { 
   std::make_pair ( "1. key", "1. value" ),
   std::make_pair ( "2. key", "2. value" ),
   std::make_pair ( "3. key", "3. value" ) 
 };
 
 // Retrieves the recorded map of strings from the file through a stream.
-auto map { jet::map { retrieve_file }.value() };
-for (const auto& pair: map)
-  std::cout << pair.first << "\n" << pair.second << "\n\n";
+auto map { jet::map { retrieve_file, true }.value() };
+  for (const auto& pair: map)
+    std::cout << pair.first << pair.second;
+
+  std::cout << std::endl;
 ```
 
 `stdout`
 ```
 1. key
 1. value
-
 2. key
 2. value
-
 3. key
 3. value
 ```

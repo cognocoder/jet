@@ -13,13 +13,16 @@ namespace jet {
   class map : public jet::pair {
   public:
     // Constructor for jet::pair.
-    explicit map(std::fstream& file) : jet::pair{file}, file{file} {}
+    map(std::fstream& file, bool breakline = false) :
+        jet::pair{file, breakline}, file{file} {}
 
     // Persists a map of strings into the file.
     inline jet::map operator<<
         (const std::map<std::string,std::string>& map) const {
-      for (const auto& pair: map)
-        this->file << pair.first << '\0' << pair.second << '\0';
+      for (const auto& pair: map) {
+        jet::string::operator<<(pair.first);
+        jet::string::operator<<(pair.second);
+      }
       return *this;
     }
 
@@ -33,10 +36,7 @@ namespace jet {
       
       try {
         while (true) {
-          std::stringstream ss1, ss2;
-          stream(ss1);
-          stream(ss2);
-          map.insert({ ss1.str(), ss2.str() });
+          map.insert({ jet::string::value(), jet::string::value() });
         }
       } catch (std::runtime_error& err) { }
 
@@ -49,15 +49,10 @@ namespace jet {
   };
 
   inline std::ostream& operator<<(std::ostream& os, const jet::map& jetmap) {
-    os << "jet::map " << &jetmap;
-    
     try {
       while (true) {
-        std::stringstream ss;
-        ss << "\n\n     key ";
-        jetmap.stream(ss) << "\n   value ";
-        jetmap.stream(ss);
-        os << ss.str();
+        jetmap.stream(os);
+        jetmap.stream(os);
       }
     } catch (std::runtime_error& err) { }
     
