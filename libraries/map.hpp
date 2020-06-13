@@ -9,10 +9,10 @@
 // Jet namespace.
 namespace jet {
 
-  // Persist or retrieve a pair of strings over a file.
+  // Persist or retrieve a map of strings over a file.
   class map : public jet::pair {
   public:
-    // Constructor for jet::pair.
+    // Constructor for jet::map.
     map(std::fstream& file, bool breakline = false) :
         jet::pair{file, breakline}, file{file} {}
 

@@ -79,6 +79,36 @@ std::string str { jet::string { retrieve_file }.value() };
 
 ---
 
+## `jet::vector`
+Persist or retrieve a vector of strings over a file. The `vector` driver provides an example of usage:
+
+Partial view of `drivers/vector.cpp`
+```C++
+// Persist a vector of strings into the file.
+jet::vector { persist_file, true } << std::vector<std::string> { 
+  "jet" , "cogno", "coder"
+};
+
+// Retrieves the recorded vector of strings from the file.
+auto vector { jet::vector { retrieve_file, true }.value() };
+for (const auto& str: vector)
+  std::cout << str;
+
+std::cout << std::endl;
+```
+
+`stdout`
+```
+jet
+cogno
+coder
+```
+
+The variable `vector` type is `std::vector<std::string>`. The `jet::vector::value` method receives the number of strings *n* to retrieve. If *n* is less or equals than zero, `jet::vector` retrieve strings until it reaches the end of file. It will read *n* strings or stop at end of file, otherwise.
+
+
+---
+
 ## `jet::pair`
 Persist or retrieve a pair of strings over a file. The `pair` driver provides an example of usage:
 
@@ -87,7 +117,7 @@ Partial view of `drivers/partial.cpp`
 // Persist a pair of strings into the file.
 jet::pair { persist_file, true } << std::make_pair ( "first", "second" );
 
-// Retrieves the recorded pair of strings from the file through a stream.
+// Retrieves the recorded pair of strings from the file.
 auto pair { jet::pair { retrieve_file, true }.value() };
 std::cout << pair.first << pair.second << std::endl;
 ```
@@ -114,7 +144,7 @@ jet::map { persist_file, true } << std::map<std::string,std::string> {
   std::make_pair ( "3. key", "3. value" ) 
 };
 
-// Retrieves the recorded map of strings from the file through a stream.
+// Retrieves the recorded map of strings from the file.
 auto map { jet::map { retrieve_file, true }.value() };
 for (const auto& pair: map)
   std::cout << pair.first << pair.second;
@@ -132,4 +162,4 @@ std::cout << std::endl;
 3. value
 ```
 
-The variable `map` type is `std::map<std::string,std::string>`. The `jet::map::value` method receives the number of pairs *n* to retrieve. If *n* is less or equals than zero, `jet::map` retrieve pairs until it reaches the end of file. It will attempt to read *n* pairs or stop at end of file, otherwise.
+The variable `map` type is `std::map<std::string,std::string>`. The `jet::map::value` method receives the number of pairs *n* to retrieve. If *n* is less or equals than zero, `jet::map` retrieve pairs until it reaches the end of file. It will read *n* pairs or stop at end of file, otherwise.
