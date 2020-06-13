@@ -13,7 +13,7 @@ namespace jet {
   class pair : public jet::string {
   public:
     // Constructor for jet::pair.
-    pair(std::fstream& file, bool breakline = false) : 
+    pair(std::iostream& file, bool breakline = false) : 
         jet::string{file, breakline}, file{file} {}
 
     // Persists a pair of strings into the file.
@@ -34,8 +34,8 @@ namespace jet {
     }
 
   private:
-    std::fstream& file;
-      
+    std::iostream& file;
+
   };
 
   inline std::ostream& operator<<(std::ostream& os, const jet::pair& jetpair) {

@@ -13,7 +13,7 @@ namespace jet {
   class string {
   public:
     // Constructor for jet::string.
-    string(std::fstream& file, bool breakline = false) : 
+    string(std::iostream& file, bool breakline = false) : 
         file{file}, breakline{breakline} {}
 
     // Persists a string into the file.
@@ -58,11 +58,10 @@ namespace jet {
 
       return os;
     }
-    
-    private:
-      std::fstream& file;
 
-      bool breakline;
+  private:
+    std::iostream& file;
+    bool breakline;
 
   };
 

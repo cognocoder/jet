@@ -8,7 +8,7 @@
 int main() {
   // Persist a string into the file.
   auto persist_path { "./test.str" };
-  auto persist_mode { std::fstream::out | std::fstream::trunc };
+  auto persist_mode { std::iostream::out | std::iostream::trunc };
   std::fstream persist_file { persist_path, persist_mode };
   
   jet::string { persist_file, true } << "rec \\0 rec ~\0~ !rec";
@@ -18,7 +18,7 @@ int main() {
 
   // Retrieves the recorded string from the file through a stream.
   auto retrieve_path { "./test.str" };
-  auto retrieve_mode { std::fstream::in };
+  auto retrieve_mode { std::iostream::in };
   std::fstream retrieve_file { retrieve_path, retrieve_mode };
   
   std::cout << jet::string { retrieve_file, true } << std::endl;

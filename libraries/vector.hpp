@@ -13,7 +13,7 @@ namespace jet {
   class vector : public jet::string {
   public:
     // Constructor for jet::vector.
-    vector(std::fstream& file, bool breakline = false) :
+    vector(std::iostream& file, bool breakline = false) :
         jet::string{file, breakline}, file{file} {}
 
     // Persists a vector of strings into the file.
@@ -45,7 +45,7 @@ namespace jet {
     }
 
   private:
-    std::fstream& file;
+    std::iostream& file;
       
   };
 

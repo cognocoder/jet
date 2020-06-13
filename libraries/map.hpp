@@ -13,7 +13,7 @@ namespace jet {
   class map : public jet::pair {
   public:
     // Constructor for jet::map.
-    map(std::fstream& file, bool breakline = false) :
+    map(std::iostream& file, bool breakline = false) :
         jet::pair{file, breakline}, file{file} {}
 
     // Persists a map of strings into the file.
@@ -47,7 +47,7 @@ namespace jet {
     }
 
   private:
-    std::fstream& file;
+    std::iostream& file;
       
   };
 
