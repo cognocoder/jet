@@ -1,6 +1,6 @@
 
 # `jet`
-Persist or retrieve a strings over a files.
+Persist or retrieve strings over files.
 
 ## Package Layout
 This project adopts an artesanal, minimalist, rolling release, driver based, public headers first `C++` [package layout](), distributed with a commented `makefile`.
