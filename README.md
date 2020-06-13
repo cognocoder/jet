@@ -69,12 +69,12 @@ The retrieve method will attempt to read the file, a character at a time, until 
 A `jet::string` can be retrieved into a output stream `std::ostream` or a `std::string`. The retrieve method returns the output stream, if used against one, in order to enable sequential stream data flow:
 
 ```C++
-  std::cout << jet::string { retrieve_file } << "data flow" << std::endl;
+std::cout << jet::string { retrieve_file } << "data flow" << std::endl;
 ```
 
 A `std::string` can be retrieved using the `value` method:
 ```C++
-  std::string str { jet::string { retrieve_file }.value() };
+std::string str { jet::string { retrieve_file }.value() };
 ```
 
 ---
@@ -116,10 +116,10 @@ jet::map { persist_file, true } << std::map<std::string,std::string> {
 
 // Retrieves the recorded map of strings from the file through a stream.
 auto map { jet::map { retrieve_file, true }.value() };
-  for (const auto& pair: map)
-    std::cout << pair.first << pair.second;
+for (const auto& pair: map)
+  std::cout << pair.first << pair.second;
 
-  std::cout << std::endl;
+std::cout << std::endl;
 ```
 
 `stdout`
@@ -132,4 +132,4 @@ auto map { jet::map { retrieve_file, true }.value() };
 3. value
 ```
 
-The variable `map` type is `std::map<std::string,std::string>`.
+The variable `map` type is `std::map<std::string,std::string>`. The `jet::map::value` method receives the number of pairs *n* to retrieve. If *n* is less or equals than zero, `jet::map` retrieve pairs until it reaches the end of file. It will attempt to read *n* pairs or stop at end of file, otherwise.

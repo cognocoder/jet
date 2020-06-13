@@ -31,13 +31,16 @@ namespace jet {
         (std::ostream& os, const jet::map& jetmap);
 
     // Retrieves a map of strings from the file into a std::map.
-    inline std::map<std::string,std::string> value() const {
+    inline std::map<std::string,std::string> value(int n = 0) const {
       std::map<std::string,std::string> map;
       
       try {
-        while (true) {
-          map.insert({ jet::string::value(), jet::string::value() });
-        }
+        if (n <= 0)
+          while (true)
+            map.insert({ jet::string::value(), jet::string::value() });
+        else
+          while (n--)
+            map.insert({ jet::string::value(), jet::string::value() });
       } catch (std::runtime_error& err) { }
 
       return map;
