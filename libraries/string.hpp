@@ -42,9 +42,9 @@ namespace jet {
       while (true) {
         this->file >> std::noskipws >> c;
         
-        if (c == '\0') {
+        if (c == '\0')
           break;
-        }
+        
         if (this->file.eof())
           throw std::runtime_error { "End of file reached." };
         
