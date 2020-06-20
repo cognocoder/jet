@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <iostream>
 
 // Jet namespace.
 namespace jet {
@@ -37,19 +38,14 @@ namespace jet {
   protected:
     // Retrieves a string from the file into a std::ostream.
     inline std::ostream& stream(std::ostream& os) const {
+      std::stringstream ss;
       auto c { ' ' };
 
-      while (true) {
-        this->file >> std::noskipws >> c;
-        
-        if (c == '\0')
-          break;
-        
-        if (this->file.eof())
-          throw std::runtime_error { "End of file reached." };
-        
-        os << c;
-      }
+      ss << file.rdbuf();
+      os << ss.str();
+
+      if (this->file.eof())
+        throw std::runtime_error { "End of file reached." };
 
       if (this->breakline) {
         this->file >> std::noskipws >> c;
