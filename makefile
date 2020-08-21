@@ -16,8 +16,10 @@ PREFIX ?= /usr
 .PHONY: install
 install: jet 
 	mkdir -p $(DESTDIR)$(PREFIX)/include/jet
-	install -Dm755 jet $(DESTDIR)$(PREFIX)/bin/jet
-	install -Dm644 $(foreach file, $(LIB), $(file)) $(DESTDIR)$(PREFIX)/include/jet/
+	cp jet $(DESTDIR)$(PREFIX)/bin/jet
+	chmod 755 $(DESTDIR)$(PREFIX)/bin/jet
+	cp $(foreach file, $(LIB), $(file)) $(DESTDIR)$(PREFIX)/include/jet/
+	chmod 644 $(DESTDIR)$(PREFIX)/include/jet/*.hpp
 
 .PHONY: uninstall
 uninstall:
