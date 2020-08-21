@@ -1,43 +1,26 @@
 
-# Executable file name.
-BIN := jet
+LIB := jet.hpp string.hpp vector.hpp pair.hpp map.hpp
 
-# Compiler flags.
-CFLAGS := -std=c++20
+.PHONY: build
+build: clean jet
 
-# Default driver in use.
-DRV := jet
-# Package public header files.
-PKG := jet.hpp
-# Private header files.
-LIB := string.hpp vector.hpp pair.hpp map.hpp
+jet: $(LIB) drivers/jet.cpp
+	g++ $? -std=c++20 -o jet
 
-ARG :=
-
-.PHONY: all clean driver run build install
-
-# Since this is a header only library, default target will clean the 
-# environment, build the default driver, and run it.
-all: clean driver run
-
+.PHONY: clean
 clean:
-	@rm -rf $(BIN)
-	
-$(BIN): $(PKG) $(LIB) drivers/$(DRV).cpp
-	@g++ $? $(CFLAGS) -o $(BIN)
+	rm jet
 
-run: $(BIN)
-	@./$(BIN) $(ARG)
+PREFIX ?= /usr
 
-build: clean $(BIN)
+.PHONY: install
+install: jet 
+	mkdir -p $(DESTDIR)$(PREFIX)/include/jet
+	install -Dm755 jet $(DESTDIR)$(PREFIX)/bin/jet
+	install -Dm644 $(foreach file, $(LIB), $(file)) $(DESTDIR)$(PREFIX)/include/jet/
 
-install: $(BIN) $(PKG) $(LIB)
-	@mkdir -p /usr/include/jet
-	@cp $(foreach file, $(PKG), $(file)) /usr/include/jet/
-	@cp $(foreach file, $(LIB), $(file)) /usr/include/jet/
-	@cp $(foreach file, $(BIN), $(file)) /usr/bin/
-
+.PHONY: uninstall
 uninstall:
-	@rm -rf /usr/include/jet
-	@rm /usr/bin/$(BIN)
+	rm -rf $(DESTDIR)$(PREFIX)/include/jet
+	rm $(DESTDIR)$(PREFIX)/bin/jet
 

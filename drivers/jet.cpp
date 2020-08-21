@@ -10,40 +10,51 @@
 
 int main(int argc, char* argv[]) {
 
-  std::string file_name { "jf.jet" };
+  std::string file_name;
 
   bool out { true };
   bool in { true };
   bool help { false };
   bool delete_keys { false };
 
-  if (argc > 1) {
-    std::unordered_set<std::string> options;
+  bool no_file { true };
 
-    for (int i = 1; i < argc; i++) {
-      options.insert(argv[i]);
+  std::unordered_set<std::string> options;
+  
+  for (int i = 1; i < argc; i++) {
+    std::string str { argv[i] };
+    if (str.find('-') != std::string::npos) {
+      options.insert(str);
     }
-
-    if (options.contains("-h")) help = true;
-    if (options.contains("--help")) help = true;
-
-    if (options.contains("-f")) file_name = std::string(argv[argc-1]);
-
-    if (options.contains("-no")) out = false;
-    if (options.contains("-ni")) in = false;
-
-    if (options.contains("-dk")) delete_keys = true;
+    else {
+      file_name = str;
+      no_file = false;
+    }
   }
 
+  if (no_file)
+    std::cerr << "Error: no file specified." << std::endl;
+
+  if (options.contains("-h")) help = true;
+  if (options.contains("--help")) help = true;
+
+
+  if (options.contains("-no")) out = false;
+  if (options.contains("-ni")) in = false;
+
+  if (options.contains("-dk")) delete_keys = true;
+
   if (help) {
-    std::cout << "jet usage: $ jet [options ...] [file]\n\n"
+    std::cout << "jet usage: $ jet [options] file\n\n"
       " --help or\n"
       "  -h          Display this message.\n\n"
-      "  -f          Specify [file] as file name.\n\n"
-      "  -no         No output from file.\n"
-      "  -ni         No input to map.\n\n"
-      "  -dk         Delete keys readed from input to map.\n\n"
+      "  -no         No output for data read from file.\n"
+      "  -ni         No input for map from input stream.\n\n"
+      "  -dk         Delete keys readed from input strem from map.\n\n"
       << std::endl;
+
+    if (argc == 2)
+      return 0;
   }
 
   auto path { std::filesystem::current_path().string() };
@@ -56,8 +67,7 @@ int main(int argc, char* argv[]) {
   };
 
   if (out) {
-    std::cout << "\n " << file_name << "\n" << std::endl;
-
+    std::cout << std::endl;
     for (const auto& pair: map)
       std::cout << "  " << pair.first << "\n  " << pair.second << "\n";
     std::cout << std::endl;
@@ -68,7 +78,8 @@ int main(int argc, char* argv[]) {
     std::fstream ofile { file_path, file_mode };
     
     if (!ofile)
-      throw std::runtime_error { "Couldn't open file for writing the map." };
+      throw std::runtime_error { "Error: "
+        "couldn't open file for writing the map." };
 
     std::string key, value;
     while (!delete_keys) {
